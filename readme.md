@@ -1,6 +1,10 @@
 crappy salt debug for template renders
 ======================================
 
+
+
+
+_**do not use in a production enviroment**_
 a simple to use debug module for seeing how a template looks to a minion
 
 it is hacked together out of salts file module. not my original work but am using it to learn some python while I'm at it. 
