@@ -8,5 +8,4 @@ it is hacked together out of salts file module. not my original work but am usin
 pretty simple to use
 just point it at the salt:// file you want it to render and tell it the template. 
 
-such as 
-    salt '*' debug.render source=salt://ntp/files/ntp.jinja template=jinja
+such as `salt '*' debug.render source=salt://ntp/files/ntp.jinja template=jinja`
