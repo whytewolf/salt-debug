@@ -1,28 +1,12 @@
 from __future__ import absolute_import, print_function
 
-import contextlib
-import difflib
-import errno
-import fileinput
-import fnmatch
 import itertools
 import logging
-import operator
 import os
-import re
-import shutil
-import stat
-import sys
 import tempfile
-import time
-import glob
-from functools import reduce 
-from collections import Iterable, Mapping
 
 
 import salt.ext.six as six
-from salt.ext.six.moves import range, zip
-from salt.ext.six.moves.urllib.parse import urlparse as _urlparse
 
 try:
     import grp
@@ -37,7 +21,6 @@ import salt.utils.filebuffer
 import salt.utils.files
 import salt.utils.atomicfile
 import salt.utils.url
-from salt.exceptions import CommandExecutionError, SaltInvocationError
 
 log = logging.getLogger(__name__)
 
@@ -49,16 +32,21 @@ HASHES = [
             ['sha1',40],
             ['md5',32],
          ]
-def  __virtual__():
+
+
+def __virtual__():
     return True
+
 
 def _error(ret,err_msg):
     ret['result'] = False
     ret['comment'] = err_msg
     return ret
 
+
 def _get_bkroot():
     return os.path.join(__salt__['config.get']('cachedir'), 'file_backup')
+
 
 def __clean_tmp(sfn):
     if sfn.startswith(tempfile.gettempdir()):
@@ -68,6 +56,7 @@ def __clean_tmp(sfn):
         if os.path.exists(sfn) and not in_roots:
             os.remove(sfn)
 
+
 def render(
         template,
         source,
@@ -76,25 +65,24 @@ def render(
         defaults=None,
         **kwargs):
     '''
-    Define a simple render test to find out wha thte output of jinja is on a minion
+    Define a simple render test to find out what the output of a render is on a minion
 
-    template
+    template (required)
         template format
     
-    source
+    source (required)
         managed source file
 
-    source_hash
+    source_hash (optional)
        hash of the source file
 
-    context
-       variables to add to the enviroment
+    context (optional)
+       variables to add to the environment
   
-    default
+    default (optional)
        default values for the context_dict
     '''
     sfn = ''
-    source_sum = {}
     if template and source:
         sfn = __salt__['cp.cache_file'](source,saltenv)
     if not sfn or not os.path.exists(sfn):
@@ -114,7 +102,7 @@ def render(
            opts=__opts__,
            **kwargs)
     else:
-        return sfn, {}, ('Specified template format {0} is not supported').format(template)
+        return sfn, {}, 'Specified template format {0} is not supported'.format(template)
 
     if data['result']:
        sfn = data['data']
