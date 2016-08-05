@@ -11,8 +11,8 @@ it is hacked together out of salts file module. not my original work but am usin
 
 pretty simple to use
 put salt where it can bee seen from the root file_dir
-then run salt '*' state.sync_all
-or salt '*' state.sync_modules
+then run salt '\*' state.sync_all
+or salt '\*' state.sync_modules
 
 
 then just point it at the salt:// file you want it to render and tell it the template. 
