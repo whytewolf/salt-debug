@@ -26,8 +26,8 @@ debug.render
     template: The template type. aka jinja, maco, py, pydsl, ect. 
     source: the location of the file to rendered. so far only tested with salt:// locations
     saltenv: (optional, default "base") the enviroment for the source above
-    context: just like file.* this is a context dict for filleing in extra variables.
-    defaults: same as context
+    context: (optional, default None) just like file.* this is a context dict for filleing in extra variables.
+    defaults: (optional, default None) same as context
   output:
     either the rendered output, or jinja errors
 ```
@@ -42,9 +42,9 @@ debug.yamllint
     template: The template type. aka jinja, maco, py, pydsl, ect. 
     source: the location of the file to rendered. so far only tested with salt:// locations
     saltenv: (optional, default "base") the enviroment for the source above
-    context: just like file.* this is a context dict for filleing in extra variables.
-    defaults: same as context
-    yamlconf: if you don't want to use the default of relaxed the yamllint config file location.
+    context: (optional, default None) just like file.* this is a context dict for filleing in extra variables.
+    defaults: (optional, default None) same as context
+    yamlconf: (optional, default None) if you don't want to use the default of relaxed the yamllint config file location.
   output:
     a 2 part dict of the output. part 1 is problems. a list of yaml errors detected in the output of a debug.render performed on the code.
     part 2 source. the output from the debug.render performed
