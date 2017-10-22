@@ -14,6 +14,16 @@ try:
 except ImportError:
     pass
 
+
+HAS_YAMLLINT=True
+try:
+    from yamllint.config import YamlLintConfig, YamlLintConfigError
+    from yamllint.linter import PROBLEM_LEVELS
+    from yamllint import linter
+except ImportError:
+    HAS_YAMLLINT=False
+
+
 # salty libs
 import salt.utils
 import salt.utils.find
@@ -32,6 +42,9 @@ HASHES = [
             ['sha1',40],
             ['md5',32],
          ]
+
+
+
 
 
 def __virtual__():
@@ -110,4 +123,45 @@ def render(
     mydata=myfile.read()
     __clean_tmp(sfn)
     return mydata
+
+def yamllint(
+        template,
+        source,
+        saltenv='base',
+        context=None,
+        defaults=None,
+        yamlconf=None, #'/root/.config/yamllint/config',
+        **kwargs):
+    '''
+    lint the output after detecting a sucsessful render.
+
+    template (required)
+        template format
+
+    source (required)
+        managed source file
+
+    source_hash (optional)
+       hash of the source file
+
+    context (optional)
+       variables to add to the environment
+
+    default (optional)
+       default values for the context_dict
+    '''
+    if HAS_YAMLLINT:
+        if yamlconf is not None:
+            conf = YamlLintConfig(file=yamlconf)
+        else:
+            conf = YamlLintConfig('extends: relaxed')
+        yaml_out = render(template,source,saltenv,context,defaults,**kwargs)
+        problems = []
+        for problem in linter.run(yaml_out,conf):
+            problems.append({'line':problem.line,'column': problem.column, 'level': problem.level,'comment':problem.message})
+        log.debug('my problems {0}'.format(problems))
+        output = {"source":yaml_out,'problems':problems}
+        return output
+    else:
+        return False, 'yamllint is not installed'
 
