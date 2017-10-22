@@ -34,6 +34,8 @@ debug.render
 
 ## debug.yamllint
 
+depends: [yamllint](https://pypi.python.org/pypi/yamllint)
+
 ```
 debug.yamllint
   inputs:
