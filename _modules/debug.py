@@ -159,7 +159,7 @@ def yamllint(
         problems = []
         for problem in linter.run(yaml_out,conf):
             problems.append({'line':problem.line,'column': problem.column, 'level': problem.level,'comment':problem.message})
-        log.debug('my problems {0}'.format(problems))
+        log.debug('my problems \s',problems)
         output = {"source":yaml_out,'problems':problems}
         return output
     else:
