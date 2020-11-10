@@ -122,6 +122,8 @@ def render(
     myfile=open(sfn)
     mydata=myfile.read()
     __clean_tmp(sfn)
+    log.warning("This is deprecieated in favor of slsutil.renderer, please start using slsutil.renderer instead")
+    log.warning("the debug module will be going away. and will be replaced with a lint module. Feel free to make contributions to that module.")
     return mydata
 
 def yamllint(
@@ -151,16 +153,13 @@ def yamllint(
        default values for the context_dict
     '''
     if HAS_YAMLLINT:
-        if yamlconf is not None:
-            conf = YamlLintConfig(file=yamlconf)
-        else:
-            conf = YamlLintConfig('extends: relaxed')
-        yaml_out = render(template,source,saltenv,context,defaults,**kwargs)
-        problems = []
-        for problem in linter.run(yaml_out,conf):
-            problems.append({'line':problem.line,'column': problem.column, 'level': problem.level,'comment':problem.message})
-        log.debug('my problems {0}'.format(problems))
-        output = {"source":yaml_out,'problems':problems}
+        kwargs.update({
+            "context": context,
+            "defaults": defaults
+            })
+        output = __salt__.lint.yaml(source=source,render=template,saltenv=saltenv,yamlconf=yamlconf,**kwargs)
+        log.warning("debug.yamllint is being replaced with lint.yaml")
+        log.warning("the debug module will be going away. and will be replaced with a lint module. Feel free to make contributions to that module.")
         return output
     else:
         return False, 'yamllint is not installed'
